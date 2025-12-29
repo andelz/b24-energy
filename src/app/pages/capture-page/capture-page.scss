@@ -1,0 +1,86 @@
+:host {
+    display: grid;
+    align-items: center;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 33vw;
+    grid-template-areas: "toolbar details" "grid details";
+    height: 100%;
+
+    .toolbar {
+        grid-area: toolbar;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+    }
+
+    ag-grid-angular {
+        grid-area: grid;
+        height: 100%;
+    }
+
+    .rowData {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .details {
+        grid-area: details;
+
+        span {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+
+            &.main {
+                margin-inline-end: 1em;
+            }
+
+            &::after {
+                content: "kWh";
+                font-size: .75em;
+
+            }
+
+            &.percent {
+                padding: 0 0.25rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                border-radius: 0.15rem;
+                margin-inline-end: .25em;
+                &::after {
+                    content: "%";
+                    font-size: .65em;
+                }
+            }
+
+            &::before {
+                font-size: .65em;
+            }
+
+            &.pv {
+                background-color: limegreen;
+                &::before {
+                    content: 'PV';
+                }
+            }
+            &.grid {
+                background-color: orange;
+                &::before {
+                    content: 'GRID';
+                }
+            }
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            span {
+                font-weight: bold;
+                &::after {
+                    content: "kWh";
+                }
+            }
+        }
+    }
+}

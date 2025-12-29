@@ -1,0 +1,47 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height:100%;
+
+    &.dirty {
+        .database-save {
+            background-color: var(--color-primary);
+        }
+    }
+
+    header {
+        flex: 0 0 auto;
+        display: grid;
+        align-items: center;
+        grid-template-rows: auto auto;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "title . actions" "nav nav nav";
+        padding: var(--spacing-m);
+
+        h1 {
+            grid-area: title;
+            font-size: 1em;
+        }
+        .actions {
+            grid-area: actions;
+        }
+        nav {
+            grid-area: nav;
+            display: flex;
+            align-items: center;
+            column-gap: var(--spacing-m);
+
+            a {
+                &:not(.active) {
+                    text-decoration: none;
+                }
+                // background-color: ;
+            }
+        }
+    }
+
+    main {
+        flex: 1;
+        overflow-y: auto;
+    }
+}

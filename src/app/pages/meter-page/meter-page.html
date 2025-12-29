@@ -1,0 +1,68 @@
+@if(!databaseAvailable()) {
+Select a database
+} @else {
+<div class="toolbar">
+    <button (click)="add()">+</button>
+</div>
+<ag-grid-angular [rowData]="rowData" [columnDefs]="colDefs" [rowSelection]="rowSelection"
+    (selectionChanged)="onSelectionChanged($event)" (cellDoubleClicked)="onCellDoubleClicked($event)" />
+
+@if(details){
+<div class="details">
+    <h3>From grid</h3>
+    <div class="row">
+        <span class="box"> {{details.fromGrid}}</span>
+    </div>
+
+    <h3>WP</h3>
+    <div class="row wp">
+
+        <span class="box">{{details.wp}}</span>
+        <span class="box sub neighbour">{{details.wpNeighbour}}</span>
+        <span class="box sub own">{{details.wpOwn}}</span>
+
+    </div>
+
+    <h3>Flats</h3>
+    <div class="row">
+        <span class="box sub neighbour">{{details.neighbour}}</span>
+        <span class="box sub own">{{details.own}}</span>
+    </div>
+    
+    <h3>Sum</h3>
+    <div class="row sum">
+        <span class="box sub neighbour">{{details.neighbour + details.wpNeighbour}}</span>
+        <span class="box sub own">{{details.own + details.wpOwn}}</span>
+    </div>
+
+
+</div> }
+}
+
+<dialog #row>
+
+    <form class="rowData" [formGroup]="rowDataForm" (ngSubmit)="rowSubmit()">
+        <label>
+            Date
+            <input #first type="date" formControlName="date">
+        </label>
+        <label>
+            Main (consumed)
+            <input type="number" formControlName="mainConsumed">
+        </label>
+        <label>
+            Main (fed to grid)
+            <input type="number" formControlName="mainFedToGrid">
+        </label>
+        <label>
+            Own
+            <input type="number" formControlName="own">
+        </label>
+        <label>
+            neighbour
+            <input type="number" formControlName="neighbour">
+        </label>
+
+        <button [disabled]="rowDataForm.invalid">Submit</button>
+    </form>
+</dialog>

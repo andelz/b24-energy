@@ -1,0 +1,22 @@
+<header>
+
+  <h1>B24 Energy</h1>
+
+  <div class="actions">
+    <button (click)="open()">Open database</button>
+    <button (click)="create()">Create database</button>
+    <button class="database-save" [disabled]="!databaseAvailable()"
+    (click)="save()">Save database</button>
+  </div>
+
+  <nav>
+    @for(r of routes; track r.path) {
+    <a [routerLink]="r.path" [routerLinkActive]="'active'">{{r.title}}</a>
+    }
+  </nav>
+
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
