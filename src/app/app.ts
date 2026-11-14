@@ -1,32 +1,12 @@
-import { Component, inject } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterOutlet, RouterLinkWithHref, RouterLinkActive } from '@angular/router';
-import { AppService } from './services/app.service';
-import { routes } from './app.routes';
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ReactiveFormsModule, RouterLinkWithHref, RouterLinkActive],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
-  host: {
-    '[class.dirty]': 'databaseDirty()'
-  }
+  styleUrl: './app.scss'
 })
 export class App {
-  #appService = inject(AppService);
-  routes = routes;
-
-  databaseDirty = this.#appService.databaseDirty;
-  databaseAvailable = this.#appService.databaseAvailable;
-
-  async open() {
-    this.#appService.openDatabase();
-  }
-  async create() {
-    this.#appService.createDatabase();
-  }
-  async save() {
-    this.#appService.saveDatabase();
-  }
+  protected readonly title = signal('b24-energy');
 }
