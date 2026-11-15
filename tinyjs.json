@@ -1,0 +1,16 @@
+{
+  "$schema": "https://tinyjs.app/schema/tinyjs.schema.json",
+  "name": "b24-energy",
+  "title": "B24 Energy",
+  "id": "app.dox.b24-energy",
+  "version": "0.1.0",
+  "size": "1100x760",
+  "downloads": "ask",
+  "backend": "backend/main.ts",
+  "frontend": {
+    "build": "npm run build",
+    "dist": "www/browser",
+    "dev": "npm start",
+    "devUrl": "http://127.0.0.1:4203"
+  }
+}

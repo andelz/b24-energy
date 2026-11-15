@@ -1,0 +1,98 @@
+<header>
+  <h2>{{ 'b24.energy.meter.header' | translate }}</h2>
+  <div class="actions">
+    <button class="icon" (click)="add()" [title]="'b24.energy.meter.add' | translate">
+      <lucide-icon [img]="addIcon" [size]="18"></lucide-icon>
+    </button>
+  </div>
+</header>
+
+<main>
+  <omm-list multi (itemActivate)="edit($event)" (selectionChange)="onSelectionChange($event)">
+    @for (e of entries(); track e.date) {
+      <div [ommListItem]="e">
+        <div class="tile">
+          <div class="label">{{ e.date }}</div>
+          <div class="subtle">
+            <span>{{ 'b24.energy.meter.field.main-consumed' | translate }}: {{ e.mainConsumed | number: '1.0-0' }}</span>
+            <span>{{ 'b24.energy.meter.field.main-fed' | translate }}: {{ e.mainFedToGrid | number: '1.0-0' }}</span>
+            <span>{{ 'b24.energy.meter.field.own' | translate }}: {{ e.own | number: '1.0-0' }}</span>
+            <span>{{ 'b24.energy.meter.field.neighbour' | translate }}: {{ e.neighbour | number: '1.0-0' }}</span>
+          </div>
+          <div class="actions">
+            <button class="icon" (click)="remove(e, $event)">
+              <lucide-icon [img]="deleteIcon" [size]="18"></lucide-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </omm-list>
+</main>
+
+@if (summary(); as s) {
+  <section class="summary-panel">
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.meter.summary.from-grid' | translate }}</h3>
+      <div class="value">{{ s.fromGrid | number: '1.0-0' }} kWh</div>
+    </div>
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.meter.summary.wp' | translate }}</h3>
+      <div class="value">{{ s.wp | number: '1.0-0' }} kWh</div>
+      <div class="breakdown">
+        <span>{{ 'b24.energy.meter.summary.wp-own' | translate }}: {{ s.wpOwn }}</span>
+        <span>{{ 'b24.energy.meter.summary.wp-neighbour' | translate }}: {{ s.wpNeighbour }}</span>
+      </div>
+    </div>
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.meter.summary.own' | translate }}</h3>
+      <div class="value">{{ s.own | number: '1.0-0' }} kWh</div>
+    </div>
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.meter.summary.neighbour' | translate }}</h3>
+      <div class="value">{{ s.neighbour | number: '1.0-0' }} kWh</div>
+    </div>
+  </section>
+}
+
+<dialog #dialog>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <header>
+      <h1>
+        @if (editing()) {
+          {{ 'b24.energy.meter.dialog.edit' | translate }}
+        } @else {
+          {{ 'b24.energy.meter.dialog.add' | translate }}
+        }
+      </h1>
+    </header>
+    <main class="form-elements">
+      <label>
+        {{ 'b24.energy.meter.field.date' | translate }}
+        <input type="date" formControlName="date" />
+      </label>
+      <label>
+        {{ 'b24.energy.meter.field.main-consumed' | translate }}
+        <input type="number" step="any" formControlName="mainConsumed" />
+      </label>
+      <label>
+        {{ 'b24.energy.meter.field.main-fed' | translate }}
+        <input type="number" step="any" formControlName="mainFedToGrid" />
+      </label>
+      <label>
+        {{ 'b24.energy.meter.field.own' | translate }}
+        <input type="number" step="any" formControlName="own" />
+      </label>
+      <label>
+        {{ 'b24.energy.meter.field.neighbour' | translate }}
+        <input type="number" step="any" formControlName="neighbour" />
+      </label>
+    </main>
+    <footer>
+      <button type="button" (click)="cancel()">{{ 'b24.energy.button.cancel' | translate }}</button>
+      <button type="submit" class="primary" [disabled]="form.invalid || busy()">
+        {{ 'b24.energy.button.save' | translate }}
+      </button>
+    </footer>
+  </form>
+</dialog>

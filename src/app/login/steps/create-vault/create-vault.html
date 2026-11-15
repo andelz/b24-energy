@@ -1,0 +1,21 @@
+<section class="step-create-vault">
+  <p class="folder">
+    <lucide-icon [img]="fileIcon" [size]="16"></lucide-icon>
+    <span class="folder-path">{{ filePath() }}</span>
+  </p>
+  <p class="description">{{ 'dox.app.login.create.description' | translate }}</p>
+
+  <form [formGroup]="state.createForm" (ngSubmit)="submit()" class="create-form">
+    <input autofocus type="password" formControlName="pwd"
+      [placeholder]="'dox.app.login.placeholder.passphrase' | translate" />
+    <input type="password" formControlName="pwd2"
+      [placeholder]="'dox.app.login.placeholder.passphrase-confirm' | translate" />
+    <button type="submit" [disabled]="state.createForm.invalid || state.loading()">
+      {{ 'dox.app.login.button.create' | translate }}
+    </button>
+  </form>
+
+  @if (state.error()) {
+    <div class="error">{{ state.error()! | translate }}</div>
+  }
+</section>

@@ -1,0 +1,15 @@
+<section class="home">
+  <h1>{{ 'b24.energy.home.heading' | translate }}</h1>
+  <p class="lead">{{ 'b24.energy.home.lead' | translate }}</p>
+
+  <div class="stat-cards">
+    <div class="card">
+      <div class="value">{{ solarCount() }}</div>
+      <div class="label">{{ 'b24.energy.home.solar-count' | translate }}</div>
+    </div>
+    <div class="card">
+      <div class="value">{{ meterCount() }}</div>
+      <div class="label">{{ 'b24.energy.home.meter-count' | translate }}</div>
+    </div>
+  </div>
+</section>

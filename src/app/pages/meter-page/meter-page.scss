@@ -1,0 +1,18 @@
+.tile {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--omm-spacing);
+
+  .label {
+    font-weight: bold;
+    font-size: 1.05em;
+  }
+
+  .subtle {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--omm-spacing);
+  }
+}

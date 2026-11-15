@@ -1,0 +1,145 @@
+<section class="page">
+  <header>
+    <h2>{{ 'b24.energy.report.header' | translate }}</h2>
+  </header>
+
+  @if (!hasData()) {
+    <p class="empty">{{ 'b24.energy.report.no-data' | translate }}</p>
+  } @else {
+    <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="report-form">
+      <fieldset>
+        <legend>{{ 'b24.energy.report.meter-range' | translate }}</legend>
+        <label>
+          {{ 'b24.energy.report.from' | translate }}
+          <select formControlName="meterFrom">
+            <option value="">--</option>
+            @for (m of meterData(); track m.date) {
+              <option [value]="m.date">{{ m.date }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          {{ 'b24.energy.report.to' | translate }}
+          <select formControlName="meterTo">
+            <option value="">--</option>
+            @for (m of meterData(); track m.date) {
+              <option [value]="m.date">{{ m.date }}</option>
+            }
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>{{ 'b24.energy.report.solar-range' | translate }}</legend>
+        <label>
+          {{ 'b24.energy.report.from' | translate }}
+          <select formControlName="solarFrom">
+            <option value="">--</option>
+            @for (s of solarData(); track s.year + '-' + s.month) {
+              <option [value]="s.year + '-' + s.month">{{ s.year }}-{{ s.month }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          {{ 'b24.energy.report.to' | translate }}
+          <select formControlName="solarTo">
+            <option value="">--</option>
+            @for (s of solarData(); track s.year + '-' + s.month) {
+              <option [value]="s.year + '-' + s.month">{{ s.year }}-{{ s.month }}</option>
+            }
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>{{ 'b24.energy.report.pricing' | translate }}</legend>
+        <label>
+          {{ 'b24.energy.report.price-grid' | translate }} (ct./kWh)
+          <input type="number" step="any" formControlName="priceGrid" />
+        </label>
+        <label>
+          {{ 'b24.energy.report.price-pv' | translate }} (ct./kWh)
+          <input type="number" step="any" formControlName="pricePV" />
+        </label>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="submit" class="primary" [disabled]="reportForm.invalid">
+          {{ 'b24.energy.report.generate' | translate }}
+        </button>
+      </div>
+    </form>
+
+    @if (report(); as r) {
+      <div class="report-actions">
+        <button (click)="downloadPdf()">{{ 'b24.energy.report.download-pdf' | translate }}</button>
+      </div>
+
+      <section class="report" #reportContainer>
+        <h2>{{ 'b24.energy.report.header' | translate }}</h2>
+
+        <table>
+          <tr>
+            <th style="background-color: transparent;"></th>
+            <th class="bb bl" colspan="3">TS</th>
+            <th class="bb bl br" colspan="3">AK</th>
+          </tr>
+          <tr>
+            <th class="bb" style="background-color: transparent;"></th>
+            <th class="bb bl">Netz</th>
+            <th class="bb bl">PV</th>
+            <th class="bb bl">Netz + PV</th>
+            <th class="bb bl">Netz</th>
+            <th class="bb bl">PV</th>
+            <th class="bb bl br">Netz + PV</th>
+          </tr>
+          <tr>
+            <th class="bb x">Whg</th>
+            <td class="bb bl grid"><span>{{ r.neighbourSummary.whg.grid }}</span></td>
+            <td class="bb bl pv"><span>{{ r.neighbourSummary.whg.pv }}</span></td>
+            <td class="bb bl br"><span>{{ r.neighbourSummary.whg.pv + r.neighbourSummary.whg.grid }}</span></td>
+            <td class="bb bl grid"><span>{{ r.ownSummary.whg.grid }}</span></td>
+            <td class="bb bl pv"><span>{{ r.ownSummary.whg.pv }}</span></td>
+            <td class="bb bl br"><span>{{ r.ownSummary.whg.pv + r.ownSummary.whg.grid }}</span></td>
+          </tr>
+          <tr>
+            <th class="bb x">WP</th>
+            <td class="bb bl grid"><span>{{ r.neighbourSummary.wp.grid }}</span></td>
+            <td class="bb bl pv"><span>{{ r.neighbourSummary.wp.pv }}</span></td>
+            <td class="bb bl br"><span>{{ r.neighbourSummary.wp.pv + r.neighbourSummary.wp.grid }}</span></td>
+            <td class="bb bl grid"><span>{{ r.ownSummary.wp.grid }}</span></td>
+            <td class="bb bl pv"><span>{{ r.ownSummary.wp.pv }}</span></td>
+            <td class="bb bl br"><span>{{ r.ownSummary.wp.pv + r.ownSummary.wp.grid }}</span></td>
+          </tr>
+          <tr>
+            <th class="bb x">Whg + WP</th>
+            <td class="bb bl br grid"><span>{{ r.neighbourSummary.total.grid }}</span></td>
+            <td class="bb bl br pv"><span>{{ r.neighbourSummary.total.pv }}</span></td>
+            <td class="bb bl br"><span>{{ r.neighbourSummary.total.pv + r.neighbourSummary.total.grid }}</span></td>
+            <td class="bb bl br grid"><span>{{ r.ownSummary.total.grid }}</span></td>
+            <td class="bb bl br pv"><span>{{ r.ownSummary.total.pv }}</span></td>
+            <td class="bb bl br"><span>{{ r.ownSummary.total.pv + r.ownSummary.total.grid }}</span></td>
+          </tr>
+          <tr class="currency">
+            <th class="dense"></th>
+            <td class="bb bl br dense"><span>{{ r.priceGrid }}</span></td>
+            <td class="bb bl br dense"><span>{{ r.pricePV }}</span></td>
+            <td class="bb bl br dense"></td>
+            <td class="bb bl br dense"><span>{{ r.priceGrid }}</span></td>
+            <td class="bb bl br dense"></td>
+            <td class="bb bl br dense"></td>
+          </tr>
+          <tr class="currency">
+            <th class="bb x">€</th>
+            <td class="bb bl br"><span>{{ round(r.neighbourSummary.total.grid * r.priceGrid) }}</span></td>
+            <td class="bb bl br"><span>{{ round(r.neighbourSummary.total.pv * r.pricePV) }}</span></td>
+            <td class="bb bl br"></td>
+            <td class="bb bl br"><span>{{ round(r.ownSummary.total.grid * r.priceGrid) }}</span></td>
+            <td class="bb bl br"></td>
+            <td class="bb bl br"></td>
+          </tr>
+        </table>
+      </section>
+    }
+  }
+</section>

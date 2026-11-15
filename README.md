@@ -1,59 +1,85 @@
-# B24Energy
+# B24 Energy
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.30.
+Desktop app for tracking solar (PV) generation and electricity-meter readings,
+computing the grid/PV split between two flats sharing a heat pump, and exporting
+the result as a PDF report. All data lives in one encrypted vault file
+(default `b24-energy.vault`) that you pick with a native dialog; nothing is uploaded.
 
-## Development server
+An Angular app in a [tinyjs](https://tinyjs.app) shell: the system webview
+(WebView2 on Windows, WebKit on macOS and Linux) plus a small JavaScript backend
+on txiki.js. A Windows build is about 7.6 MB. Moved here from the `dox` monorepo,
+where it ran on Electron.
 
-To start a local development server, run:
+## Layout
 
-```bash
-ng serve
+```
+src/                 Angular app (the page)
+  app/services/vault-io.adapter.ts   VaultIO → tiny.api calls
+  tiny.d.ts          types for the injected `tiny` global
+backend/main.ts      tinyjs backend: vault file dialogs, read/write, last path
+tinyjs.json          app id, window, and how to build/serve the page
+assets/icon.png      app icon (1024×1024; still the tinyjs placeholder)
+www/                 Angular build output (gitignored), shipped by tinyjs
+dist/                tinyjs build output (gitignored, emptied on every build)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Prerequisites
 
-## Code scaffolding
+- Node.js 20+ and npm
+- tinyjs CLI: `irm https://tinyjs.app/install.ps1 | iex` (Windows) or
+  `curl -fsSL https://tinyjs.app/install | sh` (macOS/Linux)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Develop
 
-```bash
-ng generate component component-name
+```sh
+npm install
+npm run dev            # tinyjs dev: starts ng serve on :4203 and opens the app window
+npm start              # Angular only, in a browser (vault calls fail: no backend)
+npm run package        # tinyjs build → dist/ (runs the Angular production build first)
+npm run typecheck:backend
+npm run i18n:extract   # public/i18n/{en,de}.json, including omm-ui strings
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Changes to `src/` hot-reload; changes to `backend/` restart the backend.
+`TINYJS_DEBUG=1 npm run dev` prints every page/backend message.
 
-```bash
-ng generate --help
-```
+## How the vault is reached
 
-## Building
+The page has no file system. `vault-io.adapter.ts` implements `VaultIO` from
+`encrypted-storage/local-file-vault` by calling backend functions over `tiny.api`:
+`vaultPickNew`, `vaultPickExisting`, `vaultRead`, `vaultWrite`, `vaultExists`,
+`vaultGetLastPath`, `vaultSetLastPath`, `vaultClearLastPath`.
 
-To build the project run:
+- The bridge carries JSON only, so file bytes travel as base64.
+- The backend reads or writes a path only after the user picked it in a native
+  dialog this session, or when it is the remembered last vault.
+- Writes go to `<file>.tmp` first and are renamed over the vault.
+- The last vault path is kept in `tiny.store` (`%APPDATA%\app.dox.b24-energy\store.json`
+  on Windows). Changing `id` in `tinyjs.json` resets it.
 
-```bash
-ng build
-```
+The vault format is unchanged (`B24E0001` magic), so vaults made by the Electron
+version still open.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Things that differ from a browser
 
-## Running unit tests
+The page loads as a real `file://` document. Under that origin Chromium/WebKit
+reject `history.replaceState` to any other path, so `src/index.html` has **no
+`<base href>`**: with hash routing, `#/…` URLs must resolve against `index.html`
+itself. Don't add one back.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Dependencies from dox
 
-```bash
-ng test
-```
+| Package | Source |
+|---|---|
+| `omm-ui` | `github:andelz/omm-ui-dist#v0.1.2` |
+| `encrypted-storage` | `github:andelz/encrypted-storage-dist#v0.1.0`, imported only via `encrypted-storage/local-file-vault` (no Capacitor or cloud code) |
 
-## Running end-to-end tests
+## Shipping
 
-For end-to-end (e2e) testing, run:
+Build on the OS you ship for (`tinyjs build` can't cross-compile):
 
-```bash
-ng e2e
-```
+- Windows: ship the whole `dist/` folder (`b24-energy.exe` + `launcher.exe`).
+- macOS: `tinyjs build --dmg`, then `tinyjs notarize`.
+- Linux: the `dist/` folder.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+`tinyjs publish` produces a zip and manifest for the built-in auto-updater.

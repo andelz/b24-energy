@@ -1,0 +1,97 @@
+<header>
+  <h2>{{ 'b24.energy.capture.header' | translate }}</h2>
+  <div class="actions">
+    <button class="icon" (click)="add()" [title]="'b24.energy.capture.add' | translate">
+      <lucide-icon [img]="addIcon" [size]="18"></lucide-icon>
+    </button>
+  </div>
+</header>
+
+<main>
+  <omm-list multi (itemActivate)="edit($event)" (selectionChange)="onSelectionChange($event)">
+    @for (e of entries(); track e.year + '-' + e.month) {
+      <div [ommListItem]="e">
+        <div class="tile">
+          <div class="label">{{ e.year }}-{{ e.month | number: '2.0-0' }}</div>
+          <div class="subtle">
+            <span>{{ 'b24.energy.solar.generated' | translate }}: {{ e.generatedByPV | number: '1.0-0' }} kWh</span>
+            <span>{{ 'b24.energy.solar.consumed' | translate }}: {{ e.consumedByAppliances | number: '1.0-0' }} kWh</span>
+            <span>{{ 'b24.energy.solar.coverage' | translate }}: {{ e.consuptionCoverageByPV }}%</span>
+          </div>
+          <div class="actions">
+            <button class="icon" (click)="remove(e, $event)">
+              <lucide-icon [img]="deleteIcon" [size]="18"></lucide-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </omm-list>
+</main>
+
+@if (summary(); as s) {
+  <section class="summary-panel">
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.solar.summary.generated' | translate }}</h3>
+      <div class="value">{{ s.generated | number: '1.0-0' }} kWh</div>
+    </div>
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.solar.summary.consumed' | translate }}</h3>
+      <div class="value">{{ s.consumed | number: '1.0-0' }} kWh</div>
+      <div class="breakdown">
+        <span class="pv">PV: {{ s.coverage }}%</span>
+        <span class="grid">Grid: {{ 100 - s.coverage }}%</span>
+      </div>
+    </div>
+    <div class="summary-card">
+      <h3>{{ 'b24.energy.solar.summary.fed-to-grid' | translate }}</h3>
+      <div class="value">{{ s.fedToGrid | number: '1.0-0' }} kWh</div>
+    </div>
+  </section>
+}
+
+<dialog #dialog>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <header>
+      <h1>
+        @if (editing()) {
+          {{ 'b24.energy.solar.dialog.edit' | translate }}
+        } @else {
+          {{ 'b24.energy.solar.dialog.add' | translate }}
+        }
+      </h1>
+    </header>
+    <main class="form-elements">
+      <label>
+        {{ 'b24.energy.solar.field.year' | translate }}
+        <input type="number" formControlName="year" />
+      </label>
+      <label>
+        {{ 'b24.energy.solar.field.month' | translate }}
+        <input type="number" formControlName="month" min="1" max="12" />
+      </label>
+      <label>
+        {{ 'b24.energy.solar.field.generated' | translate }} (kWh)
+        <input type="number" step="any" formControlName="generatedByPV" />
+      </label>
+      <label>
+        {{ 'b24.energy.solar.field.consumed' | translate }} (kWh)
+        <input type="number" step="any" formControlName="consumedByAppliances" />
+      </label>
+      <label>
+        {{ 'b24.energy.solar.field.fed-to-grid' | translate }} (kWh)
+        <input type="number" step="any" formControlName="fedToGrid" />
+      </label>
+      <label>
+        {{ 'b24.energy.solar.field.coverage' | translate }} (%)
+        <input type="number" step="any" formControlName="consuptionCoverageByPV" />
+      </label>
+    </main>
+    <footer>
+      <button type="button" (click)="cancel()">{{ 'b24.energy.button.cancel' | translate }}</button>
+      <button type="submit" class="primary" [disabled]="form.invalid || busy()">
+        {{ 'b24.energy.button.save' | translate }}
+      </button>
+    </footer>
+  </form>
+</dialog>

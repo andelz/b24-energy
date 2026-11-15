@@ -1,0 +1,16 @@
+<section class="step-show-seed">
+  <p class="seed-heading">{{ 'dox.app.login.seed.heading' | translate }}</p>
+  <p class="seed-description">{{ 'dox.app.login.seed.description' | translate }}</p>
+  <div class="seed-words">
+    @for(word of state.seedMnemonic()?.split(' '); track $index) {
+      <span class="seed-word"><span class="seed-index">{{ $index + 1 }}</span>{{ word }}</span>
+    }
+  </div>
+  <label class="seed-confirm-label">
+    <input type="checkbox" (change)="state.seedConfirmed.set(!state.seedConfirmed())" [checked]="state.seedConfirmed()" />
+    {{ 'dox.app.login.seed.confirm' | translate }}
+  </label>
+  <button [disabled]="!state.seedConfirmed()" (click)="state.confirmSeed()">
+    {{ 'dox.app.login.seed.continue' | translate }}
+  </button>
+</section>

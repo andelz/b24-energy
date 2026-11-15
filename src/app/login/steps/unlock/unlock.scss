@@ -1,0 +1,66 @@
+section.step-unlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--omm-spacing);
+    max-width: 500px;
+    margin: auto;
+
+    .recovery-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: calc(var(--omm-spacing) / 2);
+        width: 100%;
+        max-width: 360px;
+
+        textarea {
+            width: 100%;
+            resize: none;
+            font: var(--omm-font-monospace);
+            font-size: 0.9em;
+        }
+    }
+
+    .link-btn {
+        background: none;
+        border: none;
+        color: var(--omm-accent, inherit);
+        opacity: 0.7;
+        cursor: pointer;
+        font-size: 0.85em;
+        padding: 0;
+        &:hover { opacity: 1; }
+    }
+
+    form:not(.recovery-form) {
+        display: grid;
+        grid-template-rows: auto auto auto;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        grid-template-areas: "input button" "copy copy" "error error";
+        gap: calc(var(--omm-spacing) / 2);
+
+        input { grid-area: input; }
+        button[type="submit"] { grid-area: button; }
+
+        .copy-passphrase-btn {
+            grid-area: copy;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--omm-spacing) / 4);
+            background: none;
+            border: none;
+            color: var(--omm-accent, inherit);
+            opacity: 0.7;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0;
+            &:hover { opacity: 1; }
+        }
+    }
+
+    .error {
+        color: var(--omm-on-surface-error);
+    }
+}

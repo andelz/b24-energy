@@ -1,0 +1,16 @@
+<div class="login">
+  <header>
+    <lucide-icon [img]="vaultIcon" [size]="64" class="vault-icon"></lucide-icon>
+    @if (stepTitle()) {
+      <h2 class="step-header">
+        <button class="back" (click)="goBack()">
+          <lucide-icon [img]="arrowLeftIcon" [size]="18"></lucide-icon>
+        </button>
+        {{ stepTitle()! | translate }}
+      </h2>
+    }
+  </header>
+  <main>
+    <router-outlet (activate)="onChildActivate()"></router-outlet>
+  </main>
+</div>

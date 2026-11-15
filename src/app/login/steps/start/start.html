@@ -1,0 +1,21 @@
+<section class="step-start">
+  @if (state.lastVaultPath(); as path) {
+    <button class="primary" (click)="state.continueLastVault()" [disabled]="state.loading()">
+      <lucide-icon [img]="resumeIcon" [size]="20"></lucide-icon>
+      {{ 'dox.app.login.button.continue-last' | translate }}
+      <span class="path">{{ path }}</span>
+    </button>
+  }
+  <button (click)="state.openExistingVault()" [disabled]="state.loading()">
+    <lucide-icon [img]="openIcon" [size]="20"></lucide-icon>
+    {{ 'dox.app.login.button.open-existing' | translate }}
+  </button>
+  <button (click)="state.createNewVault()" [disabled]="state.loading()">
+    <lucide-icon [img]="plusIcon" [size]="20"></lucide-icon>
+    {{ 'dox.app.login.button.create-new' | translate }}
+  </button>
+
+  @if (state.error()) {
+    <div class="error">{{ state.error()! | translate }}</div>
+  }
+</section>

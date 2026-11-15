@@ -1,0 +1,29 @@
+section.step-create-vault {
+    display: flex;
+    flex-direction: column;
+    gap: var(--omm-spacing);
+    max-width: 500px;
+    margin: auto;
+
+    .folder {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--omm-spacing) / 2);
+
+        .folder-path {
+            font: var(--omm-font-monospace);
+            opacity: 0.85;
+            word-break: break-all;
+        }
+    }
+
+    .create-form {
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--omm-spacing) / 2);
+    }
+
+    .error {
+        color: var(--omm-on-surface-error);
+    }
+}

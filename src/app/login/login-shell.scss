@@ -1,0 +1,90 @@
+:host {
+    display: contents;
+}
+
+.login {
+
+    --max-width: 500px;
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: var(--omm-surface);
+
+    header {
+        flex: 0 0 33vh;
+        background-image: url("/vault.jpg");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-block-end: 1px solid var(--omm-outline-muted);
+
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        grid-template-areas:
+            "icon"
+            "header";
+        align-items: center;
+
+        .vault-icon {
+            grid-area: icon;
+            color: var(--omm-text-muted);
+            margin-block-end: var(--omm-spacing);
+            background-color: var(--omm-surface);
+            box-shadow: 0 0 500px 15px var(--omm-surface);
+            border:1px solid var(--omm-outline-muted);
+            border-radius: 12px;
+            justify-self: center;
+        }
+
+        .step-header {
+            grid-area: header;
+            width: 100%;
+            max-width: var(--max-width);
+            display: flex;
+            align-items: center;
+            gap: var(--omm-spacing);
+            margin: 0 auto;
+
+            padding: var(--omm-spacing);
+            
+            .back {
+                // opacity: 0.6;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    main {
+        grid-area: main;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--omm-spacing);
+        overflow-y: auto;
+    }
+
+    // @media (min-width: 1024px) {
+    //     grid-template-columns: 1fr 1fr;
+    // }
+
+    // @media (max-width: 768px) {
+    //     grid-template-columns: 1fr;
+    //     grid-template-areas:
+    //         "."
+    //         "main"
+    //         ".";
+    //     padding: var(--omm-spacing);
+
+    //     .decor {
+    //         display: none;
+    //     }
+    // }
+}

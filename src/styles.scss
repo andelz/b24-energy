@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+@use "omm-ui/styles/omm-ui";
+@use "styles/app";
+@use "styles/global";
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font: var(--omm-font-monospace);
+}
+
+// fix for 'extra' height in lucide icons
+lucide-icon {
+  display: inline-flex;
+  vertical-align: middle;
+  line-height: 0;
+  svg {
+    display: block;
+  }
+}

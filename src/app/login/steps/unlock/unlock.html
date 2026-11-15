@@ -1,0 +1,35 @@
+<section class="step-unlock">
+  @if (state.vaultDisplayName()) {
+    <p class="vault-name">{{ state.vaultDisplayName() }}</p>
+  }
+
+  @if (!state.showRecovery()) {
+    <form [formGroup]="state.unlockForm" (ngSubmit)="state.unlockWithPassphrase()">
+      <input autofocus="autofocus" type="password" formControlName="pwd"
+        [placeholder]="'dox.app.login.placeholder.passphrase' | translate" />
+      <button type="submit" [disabled]="state.unlockForm.invalid || state.loading()">
+        {{ 'dox.app.login.button.unlock' | translate }}
+      </button>
+    </form>
+    <button class="link-btn" (click)="state.toggleRecovery()">
+      {{ 'dox.app.login.button.use-recovery' | translate }}
+    </button>
+  } @else {
+    <form [formGroup]="state.recoveryForm" (ngSubmit)="state.unlockWithMnemonic()" class="recovery-form">
+      <textarea formControlName="phrase" rows="3"
+        [placeholder]="'dox.app.login.placeholder.mnemonic' | translate"></textarea>
+      <input type="password" formControlName="pwd"
+        [placeholder]="'dox.app.login.placeholder.new-passphrase' | translate" />
+      <button type="submit" [disabled]="state.recoveryForm.invalid || state.loading()">
+        {{ 'dox.app.login.button.recover' | translate }}
+      </button>
+      <button type="button" class="link-btn" (click)="state.toggleRecovery()">
+        {{ 'dox.app.login.button.cancel-recovery' | translate }}
+      </button>
+    </form>
+  }
+
+  @if (state.error()) {
+    <div class="error">{{ state.error()! | translate }}</div>
+  }
+</section>

@@ -1,0 +1,23 @@
+<header>
+  <a class="home" routerLink="/">
+    <lucide-icon [img]="zapIcon" [size]="22" class="zap-icon"></lucide-icon>
+    <span>B24 Energy</span>
+  </a>
+  <nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      {{ 'b24.energy.nav.home' | translate }}
+    </a>
+    <a routerLink="/capture" routerLinkActive="active">{{ 'b24.energy.nav.capture' | translate }}</a>
+    <a routerLink="/meter" routerLinkActive="active">{{ 'b24.energy.nav.meter' | translate }}</a>
+    <a routerLink="/report" routerLinkActive="active">{{ 'b24.energy.nav.report' | translate }}</a>
+  </nav>
+  <div class="actions">
+    <omm-theme-toggle></omm-theme-toggle>
+    <button class="logout" (click)="logout()" title="Logout">
+      <lucide-icon [img]="logoutIcon" [size]="18"></lucide-icon>
+    </button>
+  </div>
+</header>
+<main>
+  <router-outlet></router-outlet>
+</main>

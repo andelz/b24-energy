@@ -1,0 +1,26 @@
+omm-list [ngOption] {
+  .tile {
+    flex: 1;
+    cursor: pointer;
+    border-block-end: 1px solid var(--omm-outline-muted);
+
+    .subtle {
+      color: var(--omm-text-muted);
+      font-size: var(--omm-font-size-muted);
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    transition: opacity 200ms ease-in-out;
+    opacity: 0.3;
+  }
+
+  &[data-active="true"],
+  &:hover {
+    .actions {
+      opacity: 1;
+    }
+  }
+}
